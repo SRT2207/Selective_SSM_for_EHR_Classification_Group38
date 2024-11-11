@@ -1,5 +1,5 @@
-# Structured_SSM_for_EHR_Classification
-Project 24 for 02456 2024 Group 38
+# Selective_SSM_for_EHR_Classification
+Project 24 for 02456 2024
 
 # Background
 This repository allows you to train and test a variety of electronic health record (EHR) classification models on mortality prediction for the Physionet 2012 Challenge (`P12`) dataset. More information on the dataset can be found here (https://physionet.org/content/challenge-2012/1.0.0/). Note that the data in the repository has already been preprocessed (outliers removed, normalized) in accordance with https://github.com/ExpectationMax/medical_ts_datasets/tree/master and saved as 5 randomized splits of train/validation/test data. Adam is used for optimization.
@@ -7,9 +7,32 @@ This repository allows you to train and test a variety of electronic health reco
 # Create Environment
 The dependencies are listed for python 3.9.
 
-To create a venv, run: 
+To create an environment and install required packages, run one of the following: 
 
-`pip install -r requirements.txt` 
+## Venv way
+```
+# CD into the project folder
+module load python3/3.9.19
+module load cuda/11.8
+module load cudnn/v8.8.0-prod-cuda-11.X
+python -m venv ./venv
+source ./venv/bin/activate
+pip install -r requirements.txt
+pip install torch_scatter --extra-index-url https://data.pyg.org/whl/torch-2.2.0+cu118.html
+```
+
+## Conda way
+```
+# CD into the project folder
+module load cuda/11.8
+module load cudnn/v8.8.0-prod-cuda-11.X
+conda create --name <your-env-name> python=3.9
+conda activate <your-env-name> 
+pip install -r requirements.txt
+pip install torch_scatter --extra-index-url https://data.pyg.org/whl/torch-2.2.0+cu118.html
+```
+
+
 
 
 
