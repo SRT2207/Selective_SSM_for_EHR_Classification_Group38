@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import tarfile
 
-base_path = '/Users/katrinemeldgard/Repos/Structured_SSM_for_EHR_Classification_Group38/'
+base_path = './'
 
 # Define the path to the P12data directory
 data_path = 'P12data/'
@@ -81,4 +81,3 @@ pd.concat(validation_dfs).to_pickle(base_path+'odyssey/P12data/validation_df.pkl
 
 # Display the keys of the dictionary to verify the DataFrames are named correctly
 print("DataFrames created:", list(dataframes.keys()))
-
