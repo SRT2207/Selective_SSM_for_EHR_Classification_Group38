@@ -64,7 +64,7 @@ class MambaClassifier(nn.Module):
         """Apply weight initialization."""
         self.apply(self._init_weights)
 
-    def forward(self, x, static, time, sensor_mask, **kwargs):
+    def forward(self, x, static, time, sensor_mask, labels, **kwargs):
 
         inputs_embeds = self.embeddings(
             x = x,
@@ -74,6 +74,7 @@ class MambaClassifier(nn.Module):
 
         return self.model(
             inputs_embeds=inputs_embeds,
+            labels=labels,
             output_hidden_states=False,
             return_dict=True,
         )
