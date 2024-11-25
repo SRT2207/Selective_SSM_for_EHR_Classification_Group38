@@ -173,6 +173,12 @@ def train(
             predictions = model(
                 x=data, static=static, time=times, sensor_mask=mask, delta=delta
             )
+            if model_type == "mamba":
+                print(predictions)
+                predictions = predictions["logits"]
+                recon_loss = predictions["loss"]
+                if recon_loss is None:
+                    recon_loss = 0
             if type(predictions) == tuple:
                 predictions, recon_loss = predictions
             else:
