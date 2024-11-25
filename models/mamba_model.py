@@ -36,7 +36,7 @@ class MambaPretrain(pl.LightningModule):
     def __init__(
         self,
         #vocab_size: int,
-        embedding_size: int = 768,
+        embedding_size: int = 86,
         time_embeddings_size: int = 32,
         visit_order_size: int = 3,
         type_vocab_size: int = 9,
@@ -105,12 +105,12 @@ class MambaPretrain(pl.LightningModule):
             module.weight.data.normal_(mean=0.0, std=self.config.initializer_range)
             if module.padding_idx is not None:
                 module.weight.data[module.padding_idx].zero_()
-        elif isinstance(module, nn.LayerNorm):
-            print('-------module')
-            print(module)
-            print(module.bias)
-            module.bias.data.zero_()
-            module.weight.data.fill_(1.0)
+        # elif isinstance(module, nn.LayerNorm):
+        #     print('-------module')
+        #     print(module)
+        #     print(module.bias)
+        #     module.bias.data.zero_()
+        #     module.weight.data.fill_(1.0)
 
     def post_init(self) -> None:
         """Apply weight initialization."""
@@ -125,11 +125,20 @@ class MambaPretrain(pl.LightningModule):
         """Forward pass for the model."""
         
         inputs_embeds = self.embeddings(
-            data=x,
+            x=x,
             static=static,
             time=time,
             sensor_mask=sensor_mask
         )
+        print('---------input embeds')
+        print(inputs_embeds)
+        print('\n-----------model')
+        print(self.model(
+            inputs_embeds=inputs_embeds,
+            labels=labels,
+            output_hidden_states=output_hidden_states,
+            return_dict=return_dict,
+        ))
 
         return self.model(
             inputs_embeds=inputs_embeds,

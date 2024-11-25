@@ -7,6 +7,7 @@ import torch
 from torch import nn
 from transformers import BigBirdConfig, MambaConfig
 from x_transformers import Encoder
+import numpy as np
 
 
 class TimeEmbeddingLayer(nn.Module):
@@ -522,7 +523,7 @@ class MambaEmbeddingsForCEHR(nn.Module):
 
 
         # self.tanh = nn.Tanh()
-        self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=self.layer_norm_eps)
+        # self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=self.layer_norm_eps)
         # self.dropout = nn.Dropout(self.hidden_dropout_prob)
         # End copy
 
@@ -593,4 +594,4 @@ class MambaEmbeddingsForCEHR(nn.Module):
         static = self.static_embedding(static)
         x_merged = torch.cat((x_time, static), axis=1)
 
-        return self.LayerNorm(x_merged)
+        return x_merged
