@@ -162,8 +162,10 @@ class EncoderClassifierRegular(nn.Module):
         # concatenate poolingated attented tensors
         static = self.static_embedding(static)
         x_merged = torch.cat((x_time, static), axis=1)
+        print(x_merged.shape)
 
         nonlinear_merged = self.nonlinear_merger(x_merged).relu()
+        print(nonlinear_merged.shape)
 
         # classify!
         return self.classifier(nonlinear_merged)
