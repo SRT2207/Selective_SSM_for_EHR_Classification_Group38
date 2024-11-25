@@ -15,6 +15,7 @@ from models.early_stopper import EarlyStopping
 from models.deep_set_attention import DeepSetAttentionModel
 from models.grud import GRUDModel
 from models.ip_nets import InterpolationPredictionModel
+from models.mamba_model import MambaPretrain
 
 
 def train_test(
@@ -128,6 +129,11 @@ def train(
             return_intermediates=False,
             **model_args
         )
+    elif model_type == 'mamba':
+        model = MambaPretrain(
+            #TODO set model parameters
+        )
+    
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
     params = sum([np.prod(p.size()) for p in model_parameters])
     print(f"# of trainable parameters: {params}")
