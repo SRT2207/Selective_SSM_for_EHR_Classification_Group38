@@ -573,25 +573,35 @@ class MambaEmbeddingsForCEHR(nn.Module):
         # make sensor embeddings
         x_time = self.sensor_embedding(x_time)  # (N, T, F)
 
+        print('----------x_time shape')
+        print(x_time.shape)
+
         # add positional encodings
         pe = self.pos_encoder(time).to(self.device)  # taken from RAINDROP, (N, T, pe)
-        x_time = torch.add(x_time, pe)  # (N, T, F) (N, F)
+        # x_time = torch.add(x_time, pe)  # (N, T, F) (N, F)
 
-        # run  attention
-        x_time = self.attn_layers(x_time, mask=mask)
+        # # run  attention
+        # x_time = self.attn_layers(x_time, mask=mask)
 
-        # !!!!NOTE not sure if we should have attention!!!!
-        if self.pooling == "mean":
-            x_time = masked_mean_pooling(x_time, mask)
-        elif self.pooling == "median":
-            x_time = torch.median(x_time, dim=1)[0]
-        elif self.pooling == "sum":
-            x_time = torch.sum(x_time, dim=1)  # sum on time
-        elif self.pooling == "max":
-            x_time = masked_max_pooling(x_time, mask)
+        # # !!!!NOTE not sure if we should have attention!!!!
+        # if self.pooling == "mean":
+        #     x_time = masked_mean_pooling(x_time, mask)
+        # elif self.pooling == "median":
+        #     x_time = torch.median(x_time, dim=1)[0]
+        # elif self.pooling == "sum":
+        #     x_time = torch.sum(x_time, dim=1)  # sum on time
+        # elif self.pooling == "max":
+        #     x_time = masked_max_pooling(x_time, mask)
 
         # concatenate poolingated attented tensors
-        static = self.static_embedding(static)
-        x_merged = torch.cat((x_time, static), axis=1)
+        static_embeds = self.static_embedding(static)
+        static_embeds = torch.unsqueeze(static_embeds, 1).repeat(1, x_time.size(1), 1)
 
-        return x_merged
+        #x_merged = torch.cat((x_time, static), axis=1)
+
+        inputs_embeds = torch.cat(
+            (x_time, static_embeds),
+            dim=-1,
+        )
+
+        return inputs_embeds

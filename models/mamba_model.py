@@ -106,11 +106,9 @@ class MambaPretrain(pl.LightningModule):
             if module.padding_idx is not None:
                 module.weight.data[module.padding_idx].zero_()
         # elif isinstance(module, nn.LayerNorm):
-        #     print('-------module')
-        #     print(module)
-        #     print(module.bias)
-        #     module.bias.data.zero_()
         #     module.weight.data.fill_(1.0)
+        #     if module.bias is not None:
+        #         module.bias.data.zero_()
 
     def post_init(self) -> None:
         """Apply weight initialization."""
@@ -131,6 +129,7 @@ class MambaPretrain(pl.LightningModule):
             sensor_mask=sensor_mask
         )
         print('---------input embeds')
+        print(len(inputs_embeds))
         print(inputs_embeds)
         print('\n-----------model')
         print(self.model(
