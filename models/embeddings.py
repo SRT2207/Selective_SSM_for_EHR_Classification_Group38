@@ -573,9 +573,6 @@ class MambaEmbeddingsForCEHR(nn.Module):
         # make sensor embeddings
         x_time = self.sensor_embedding(x_time)  # (N, T, F)
 
-        print('----------x_time shape')
-        print(x_time.shape)
-
         # add positional encodings
         pe = self.pos_encoder(time).to(self.device)  # taken from RAINDROP, (N, T, pe)
         # x_time = torch.add(x_time, pe)  # (N, T, F) (N, F)

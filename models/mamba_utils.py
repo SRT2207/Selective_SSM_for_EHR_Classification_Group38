@@ -141,15 +141,17 @@ class MambaForSequenceClassification(MambaPreTrainedModel):
             last_token_indexes = (
                 torch.eq(input_ids, self.config.pad_token_id).int().argmax(-1) - 1
             )
-        print(batch_size)
-        print(last_hidden_states)
-        print('-------------------')
-        torch.arange(batch_size, device=last_hidden_states.device)
-        print('-------------------')
-        print(last_token_indexes)
+        # print(batch_size)
+        # print(last_hidden_states)
+        # print('-------------------')
+        # print(torch.arange(batch_size, device=last_hidden_states.device))
+        # print('-------------------')
+        # print(last_token_indexes)
+        # print('-------------------')
+        # print(last_hidden_states.shape)
         pooled_last_hidden_states = last_hidden_states[
             torch.arange(batch_size, device=last_hidden_states.device),
-            last_token_indexes,
+            [-1 for _ in range(batch_size)]
         ]
 
         logits = self.classifier(pooled_last_hidden_states)

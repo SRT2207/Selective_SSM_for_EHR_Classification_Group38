@@ -173,7 +173,6 @@ def train(
             )
 
             if model_type == "mamba":
-                print(predictions)
                 predictions = predictions["logits"]
                 recon_loss = None
                 if recon_loss is None:
