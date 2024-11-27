@@ -50,6 +50,7 @@ class MambaPretrain(pl.LightningModule):
         dropout_prob: float = 0.1,
         padding_idx: int = 0,
         cls_idx: int = 5,
+        classifier_dropout: float = 0.1,
         use_mambapy: bool = False,
     ):
         super().__init__()
@@ -62,6 +63,7 @@ class MambaPretrain(pl.LightningModule):
         self.max_num_visits = max_num_visits
         self.max_seq_length = max_seq_length
         self.state_size = state_size
+        self.classifier_dropout = classifier_dropout
         self.num_hidden_layers = num_hidden_layers
         self.expand = expand
         self.conv_kernel = conv_kernel
@@ -74,16 +76,19 @@ class MambaPretrain(pl.LightningModule):
         # fix parameters
         self.config = MambaConfig(
             #vocab_size=self.vocab_size,
+            num_labels = 2,
             hidden_size=self.embedding_size,
             state_size=self.state_size,
             num_hidden_layers=self.num_hidden_layers,
             expand=self.expand,
+            classifier_dropout = self.classifier_dropout,
             conv_kernel=self.conv_kernel,
             pad_token_id=self.padding_idx,
             bos_token_id=self.cls_idx,
             eos_token_id=self.padding_idx,
             use_mambapy=self.use_mambapy,
         )
+        self.config.problem_type = "single_label_classification"
         # fix parameters
         self.embeddings = MambaEmbeddingsForCEHR(
             config=self.config,
@@ -93,7 +98,8 @@ class MambaPretrain(pl.LightningModule):
         self.post_init()
 
         # Mamba has its own initialization
-        self.model = MambaForCausalLM(config=self.config)
+        self.base = MambaForCausalLM(config=self.config)
+        self.model = MambaForSequenceClassification(config=self.config)
 
     def _init_weights(self, module: torch.nn.Module) -> None:
         """Initialize the weights."""
@@ -115,8 +121,7 @@ class MambaPretrain(pl.LightningModule):
         self.apply(self._init_weights)
 
     def forward(
-        self, x, static, time, sensor_mask, 
-        labels: Optional[torch.Tensor] = None, #what to do
+        self, x, static, time, sensor_mask, labels,
         output_hidden_states: Optional[bool] = False, # what to do
         return_dict: Optional[bool] = True, # what to do
         **kwargs):
@@ -128,16 +133,6 @@ class MambaPretrain(pl.LightningModule):
             time=time,
             sensor_mask=sensor_mask
         )
-        print('---------input embeds')
-        print(len(inputs_embeds))
-        print(inputs_embeds)
-        print('\n-----------model')
-        print(self.model(
-            inputs_embeds=inputs_embeds,
-            labels=labels,
-            output_hidden_states=output_hidden_states,
-            return_dict=return_dict,
-        ))
 
         return self.model(
             inputs_embeds=inputs_embeds,

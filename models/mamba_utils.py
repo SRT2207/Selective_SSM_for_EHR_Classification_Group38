@@ -133,9 +133,20 @@ class MambaForSequenceClassification(MambaPreTrainedModel):
 
         # Pool the hidden states for the last tokens before padding
         # to use for classification
-        last_token_indexes = (
-            torch.eq(input_ids, self.config.pad_token_id).int().argmax(-1) - 1
-        )
+        if inputs_embeds is not None:
+            last_token_indexes = (
+                torch.eq(inputs_embeds, self.config.pad_token_id).int().argmax(-1) - 1
+            )
+        else:
+            last_token_indexes = (
+                torch.eq(input_ids, self.config.pad_token_id).int().argmax(-1) - 1
+            )
+        print(batch_size)
+        print(last_hidden_states)
+        print('-------------------')
+        torch.arange(batch_size, device=last_hidden_states.device)
+        print('-------------------')
+        print(last_token_indexes)
         pooled_last_hidden_states = last_hidden_states[
             torch.arange(batch_size, device=last_hidden_states.device),
             last_token_indexes,
