@@ -165,6 +165,7 @@ def train(
                 times = times.to(device)
                 mask = mask.to(device)
                 delta = delta.to(device)
+                labels = labels.to(device)
 
             optimizer.zero_grad()
 
@@ -182,7 +183,7 @@ def train(
             else:
                 recon_loss = 0
             predictions = predictions.squeeze(-1)
-            loss = criterion(predictions.cpu(), labels) + recon_loss
+            loss = criterion(predictions.to(device), labels) + recon_loss
             loss_list.append(loss.item())
             loss.backward()
             optimizer.step()
@@ -202,20 +203,28 @@ def train(
                     times = times.to(device)
                     mask = mask.to(device)
                     delta = delta.to(device)
+                    labels = labels.to(device)
                 predictions = model(
-                    x=data, static=static, time=times, sensor_mask=mask, delta=delta
+                    x=data, static=static, time=times, sensor_mask=mask, delta=delta, labels = labels
                 )
+                print(predictions)
+                if model_type == "mamba":
+                    predictions = predictions["logits"]
+                    recon_loss = None
+                    if recon_loss is None:
+                        recon_loss = 0
                 if type(predictions) == tuple:
                     predictions, _ = predictions
                 predictions = predictions.squeeze(-1)
                 predictions_list = torch.cat(
-                    (predictions_list, predictions.cpu()), dim=0
+                    (predictions_list, predictions.to(device)), dim=0
                 )
+                print(predictions_list, labels_list)
             probs = torch.nn.functional.softmax(predictions_list, dim=1)
             auc_score = metrics.roc_auc_score(labels_list, probs[:, 1])
             aupr_score = metrics.average_precision_score(labels_list, probs[:, 1])
 
-        val_loss = criterion(predictions_list.cpu(), labels_list)
+        val_loss = criterion(predictions_list.to(device), labels_list)
 
         with open(f"{output_path}/training_log.csv", "a") as train_log:
             train_log.write(
