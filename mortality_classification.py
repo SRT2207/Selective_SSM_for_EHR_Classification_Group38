@@ -132,6 +132,11 @@ def train(
     elif model_type == 'mamba':
         model = MambaPretrain(
             #TODO set model parameters
+            learning_rate = 5e-4,
+            num_hidden_layers = 2,
+            state_size = 2,
+            conv_kernel = 16,
+            expand = 1,
         )
     
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
@@ -204,27 +209,29 @@ def train(
                     mask = mask.to(device)
                     delta = delta.to(device)
                     labels = labels.to(device)
+
                 predictions = model(
                     x=data, static=static, time=times, sensor_mask=mask, delta=delta, labels = labels
                 )
-                print(predictions)
                 if model_type == "mamba":
                     predictions = predictions["logits"]
-                    recon_loss = None
-                    if recon_loss is None:
-                        recon_loss = 0
+
                 if type(predictions) == tuple:
                     predictions, _ = predictions
+
                 predictions = predictions.squeeze(-1)
                 predictions_list = torch.cat(
-                    (predictions_list, predictions.to(device)), dim=0
+                    (predictions_list.to(device), predictions.to(device)), dim=0
                 )
-                print(predictions_list, labels_list)
+
+            labels_list = labels_list.cpu()
+            predictions_list = predictions_list.cpu()
+            
             probs = torch.nn.functional.softmax(predictions_list, dim=1)
             auc_score = metrics.roc_auc_score(labels_list, probs[:, 1])
             aupr_score = metrics.average_precision_score(labels_list, probs[:, 1])
 
-        val_loss = criterion(predictions_list.to(device), labels_list)
+        val_loss = criterion(predictions_list.cpu(), labels_list)
 
         with open(f"{output_path}/training_log.csv", "a") as train_log:
             train_log.write(
@@ -298,14 +305,26 @@ def test(
                 times = times.to(device)
                 mask = mask.to(device)
                 delta = delta.to(device)
+                labels = labels.to(device)
+
             predictions = model(
-                x=data, static=static, time=times, sensor_mask=mask, delta=delta
+                x=data, static=static, time=times, sensor_mask=mask, delta=delta, labels = labels
             )
+            if model_type == "mamba":
+                predictions = predictions["logits"]
+
             if type(predictions) == tuple:
                 predictions, _ = predictions
+
             predictions = predictions.squeeze(-1)
-            predictions_list = torch.cat((predictions_list, predictions.cpu()), dim=0)
-    loss = criterion(predictions_list.cpu(), labels_list)
+            predictions_list = torch.cat(
+                (predictions_list.to(device), predictions.to(device)), dim=0
+            )
+
+    labels_list = labels_list.cpu()
+    predictions_list = predictions_list.cpu()
+
+    loss = criterion(predictions_list, labels_list)
     print(f"Test Loss: {loss}")
 
     probs = torch.nn.functional.softmax(predictions_list, dim=1)

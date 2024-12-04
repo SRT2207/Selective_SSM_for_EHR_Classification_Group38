@@ -1,0 +1,79 @@
+Tue Dec  3 15:28:34 2024       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 565.57.01              Driver Version: 565.57.01      CUDA Version: 12.7     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla V100-PCIE-32GB           On  |   00000000:58:00.0 Off |                    0 |
+| N/A   42C    P0             47W /  250W |       1MiB /  32768MiB |      0%   E. Process |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Loading preprocessed datasets from ./processed_datasets
+Loaded dataset from ./processed_datasets/physionet2012_1_pos.h5
+Loaded dataset from ./processed_datasets/physionet2012_1_neg.h5
+Loaded dataset from ./processed_datasets/physionet2012_1_val.h5
+Loaded dataset from ./processed_datasets/physionet2012_1_test.h5
+# of trainable parameters: 8834470
+Epoch: 1, Train Loss: 0.6559320778127701, Val Loss: 0.6551437973976135
+Validation loss decreased (inf --> 0.335629).  Saving model ...
+Epoch: 2, Train Loss: 0.6294625552873763, Val Loss: 0.6472240686416626
+Validation loss decreased (0.335629 --> 0.332966).  Saving model ...
+Epoch: 3, Train Loss: 0.6291449325425285, Val Loss: 0.6454445123672485
+Validation loss decreased (0.332966 --> 0.328918).  Saving model ...
+Epoch: 4, Train Loss: 0.6275592034771329, Val Loss: 0.6492400765419006
+EarlyStopping counter: 1 out of 10
+Epoch: 5, Train Loss: 0.6248105929957496, Val Loss: 0.6392505764961243
+Validation loss decreased (0.328918 --> 0.328892).  Saving model ...
+Epoch: 6, Train Loss: 0.6230478144827343, Val Loss: 0.645267903804779
+Validation loss decreased (0.328892 --> 0.328856).  Saving model ...
+Epoch: 7, Train Loss: 0.6197513384478432, Val Loss: 0.6266928911209106
+Validation loss decreased (0.328856 --> 0.309840).  Saving model ...
+Epoch: 8, Train Loss: 0.5925900165050749, Val Loss: 0.6037047505378723
+Validation loss decreased (0.309840 --> 0.248772).  Saving model ...
+Epoch: 9, Train Loss: 0.5408709061051172, Val Loss: 0.5418125987052917
+Validation loss decreased (0.248772 --> 0.202268).  Saving model ...
+Epoch: 10, Train Loss: 0.5148767890438201, Val Loss: 0.5284151434898376
+Validation loss decreased (0.202268 --> 0.186451).  Saving model ...
+Epoch: 11, Train Loss: 0.49494920883859905, Val Loss: 0.5246322154998779
+Validation loss decreased (0.186451 --> 0.179266).  Saving model ...
+Epoch: 12, Train Loss: 0.4823033116639607, Val Loss: 0.5346137285232544
+Validation loss decreased (0.179266 --> 0.175568).  Saving model ...
+Epoch: 13, Train Loss: 0.4739740604446048, Val Loss: 0.5275343060493469
+Validation loss decreased (0.175568 --> 0.174023).  Saving model ...
+Epoch: 14, Train Loss: 0.46481774085097843, Val Loss: 0.545796811580658
+Validation loss decreased (0.174023 --> 0.169058).  Saving model ...
+Epoch: 15, Train Loss: 0.45915466192222776, Val Loss: 0.5318175554275513
+EarlyStopping counter: 1 out of 10
+Epoch: 16, Train Loss: 0.4480904631671451, Val Loss: 0.5363265872001648
+Validation loss decreased (0.169058 --> 0.166195).  Saving model ...
+Epoch: 17, Train Loss: 0.44342464492434547, Val Loss: 0.5180088877677917
+EarlyStopping counter: 1 out of 10
+Epoch: 18, Train Loss: 0.4381585956092865, Val Loss: 0.5157276391983032
+EarlyStopping counter: 2 out of 10
+Epoch: 19, Train Loss: 0.42920632305599393, Val Loss: 0.5231167674064636
+EarlyStopping counter: 3 out of 10
+Epoch: 20, Train Loss: 0.4246306305839902, Val Loss: 0.5094438791275024
+EarlyStopping counter: 4 out of 10
+Epoch: 21, Train Loss: 0.416880212842472, Val Loss: 0.556455135345459
+EarlyStopping counter: 5 out of 10
+Epoch: 22, Train Loss: 0.41071596032097224, Val Loss: 0.5277647376060486
+EarlyStopping counter: 6 out of 10
+Epoch: 23, Train Loss: 0.40674722833292826, Val Loss: 0.5093575716018677
+EarlyStopping counter: 7 out of 10
+Epoch: 24, Train Loss: 0.39712088070218526, Val Loss: 0.515132486820221
+EarlyStopping counter: 8 out of 10
+Epoch: 25, Train Loss: 0.3919023809924958, Val Loss: 0.5513239502906799
+EarlyStopping counter: 9 out of 10
+Epoch: 26, Train Loss: 0.38495856819171753, Val Loss: 0.5561020970344543
+EarlyStopping counter: 10 out of 10
+Early stopping
