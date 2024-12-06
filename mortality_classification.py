@@ -132,11 +132,12 @@ def train(
     elif model_type == 'mamba':
         model = MambaPretrain(
             #TODO set model parameters
-            learning_rate = 5e-4,
-            num_hidden_layers = 16,
+            learning_rate = 5e-5,
+            num_hidden_layers = 8,
             state_size = 16,
-            conv_kernel = 16,
-            expand = 1,
+            conv_kernel = 8,
+            expand = 2,
+            dropout_prob=0.15,
         )
     
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
