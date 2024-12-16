@@ -49,7 +49,6 @@ class MambaPretrain(pl.LightningModule):
         learning_rate: float = 5e-5,
         dropout_prob: float = 0.1,
         padding_idx: int = 0,
-        cls_idx: int = 5,
         classifier_dropout: float = 0.1,
         use_mambapy: bool = False,
     ):
@@ -70,7 +69,6 @@ class MambaPretrain(pl.LightningModule):
         self.learning_rate = learning_rate
         self.dropout_prob = dropout_prob
         self.padding_idx = padding_idx
-        self.cls_idx = cls_idx
         self.use_mambapy = use_mambapy
 
         # fix parameters
@@ -84,8 +82,6 @@ class MambaPretrain(pl.LightningModule):
             classifier_dropout = self.classifier_dropout,
             conv_kernel=self.conv_kernel,
             pad_token_id=self.padding_idx,
-            bos_token_id=self.cls_idx,
-            eos_token_id=self.padding_idx,
             use_mambapy=self.use_mambapy,
         )
         self.config.problem_type = "single_label_classification"

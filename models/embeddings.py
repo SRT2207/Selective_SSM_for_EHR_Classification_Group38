@@ -459,12 +459,7 @@ class MambaEmbeddingsForCEHR(nn.Module):
     # Copied from transformers.models.bert.modeling_bert.BertEmbeddings.__init__
     def __init__(
         self,
-        config: MambaConfig,
         # Original
-        type_vocab_size: int = 9,
-        max_num_visits: int = 512,
-        time_embeddings_size: int = 32,
-        visit_order_size: int = 3,
         layer_norm_eps: float = 1e-12,
         hidden_dropout_prob: float = 0.1,
 
@@ -515,28 +510,12 @@ class MambaEmbeddingsForCEHR(nn.Module):
         )
 
         self.pos_encoder = PositionalEncodingTF(self.sensor_axis_dim)
-        # Original
-        # self.type_vocab_size = type_vocab_size
-        # self.max_num_visits = max_num_visits
         self.layer_norm_eps = layer_norm_eps
-        # self.hidden_dropout_prob = hidden_dropout_prob
+        self.hidden_dropout_prob = hidden_dropout_prob
 
+        self.dropout = nn.Dropout(self.hidden_dropout_prob)
 
-        # self.tanh = nn.Tanh()
-        # self.LayerNorm = nn.LayerNorm(config.hidden_size, eps=self.layer_norm_eps)
-        # self.dropout = nn.Dropout(self.hidden_dropout_prob)
-        # End copy
-
-    def forward(
-        self, x, static, time, sensor_mask, **kwargs,
-        # input_ids: Optional[torch.Tensor] = None,
-        # inputs_embeds: Optional[torch.Tensor] = None,
-        # token_type_ids_batch: Optional[torch.Tensor] = None,
-        # time_stamps: Optional[torch.Tensor] = None,
-        # ages: Optional[torch.Tensor] = None,
-        # visit_orders: Optional[torch.Tensor] = None,
-        # visit_segments: Optional[torch.Tensor] = None,
-    ) -> Any:
+    def forward(self, x, static, time, sensor_mask, **kwargs,) -> Any:
         """Return the final embeddings of concept ids.
 
         Parameters
@@ -556,9 +535,6 @@ class MambaEmbeddingsForCEHR(nn.Module):
         visit_segments : torch.Tensor
             Visit segments of the input data.
         """
-        # if inputs_embeds is None:
-        #     inputs_embeds = self.word_embeddings(input_ids)
-
         x_time = torch.clone(x)  # (N, F, T)
         x_time = torch.permute(x_time, (0, 2, 1))  # (N, T, F)
         mask = (
@@ -575,30 +551,17 @@ class MambaEmbeddingsForCEHR(nn.Module):
 
         # add positional encodings
         pe = self.pos_encoder(time).to(self.device)  # taken from RAINDROP, (N, T, pe)
-        # x_time = torch.add(x_time, pe)  # (N, T, F) (N, F)
-
-        # # run  attention
-        # x_time = self.attn_layers(x_time, mask=mask)
-
-        # # !!!!NOTE not sure if we should have attention!!!!
-        # if self.pooling == "mean":
-        #     x_time = masked_mean_pooling(x_time, mask)
-        # elif self.pooling == "median":
-        #     x_time = torch.median(x_time, dim=1)[0]
-        # elif self.pooling == "sum":
-        #     x_time = torch.sum(x_time, dim=1)  # sum on time
-        # elif self.pooling == "max":
-        #     x_time = masked_max_pooling(x_time, mask)
 
         # concatenate poolingated attented tensors
         static_embeds = self.static_embedding(static)
         static_embeds = torch.unsqueeze(static_embeds, 1).repeat(1, x_time.size(1), 1)
 
-        #x_merged = torch.cat((x_time, static), axis=1)
-
         inputs_embeds = torch.cat(
             (x_time, static_embeds),
             dim=-1,
         )
+
+        # Apply dropout
+        inputs_embeds = self.dropout(inputs_embeds)
 
         return inputs_embeds
