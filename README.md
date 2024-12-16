@@ -41,7 +41,7 @@ pip install torch_scatter --extra-index-url https://data.pyg.org/whl/torch-2.2.0
 
 `mamba`
 
-`python cli.py --output_path=your/path/here --epochs=100 --batch_size=16 --model_type=mamba --dropout=0.2 --attn_dropout=0.1 --layers=3 --heads=1 --pooling=max --lr=0.0001`
+`python cli.py --output_path=your/path/here --epochs=100 --batch_size=64 --model_type=mamba`
 
 `transformer` (https://arxiv.org/abs/1706.03762):
 
