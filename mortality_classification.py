@@ -134,10 +134,11 @@ def train(
             #TODO set model parameters
             learning_rate = 5e-5,
             num_hidden_layers = 8,
-            state_size = 16,
+            state_size = 8,
             conv_kernel = 8,
             expand = 2,
-            dropout_prob=0.15,
+            dropout_prob=0.3,
+            classifier_dropout=0.3,
         )
     
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
@@ -145,7 +146,7 @@ def train(
     print(f"# of trainable parameters: {params}")
     criterion = nn.CrossEntropyLoss()  # loss
     optimizer = torch.optim.Adam(
-        model.parameters(), lr=lr
+        model.parameters(), lr=lr, weight_decay=0.0001
     )
 
     early_stopping = EarlyStopping(
