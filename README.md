@@ -32,6 +32,15 @@ pip install -r requirements.txt
 pip install torch_scatter --extra-index-url https://data.pyg.org/whl/torch-2.2.0+cu118.html
 ```
 
+For the Mamba model, python 3.10 is necessary.
+## Conda way - Mamba
+```
+# CD into the project folder
+conda create --name <your-env-name> python=3.10
+conda activate <your-env-name> 
+pip install -r requirements_mamba.txt
+pip install torch_scatter --extra-index-url https://data.pyg.org/whl/torch-2.2.0+cu118.html
+```
 
 
 
