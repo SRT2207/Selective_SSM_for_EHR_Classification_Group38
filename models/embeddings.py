@@ -472,8 +472,7 @@ class MambaEmbeddingsForCEHR(nn.Module):
         layers=1,
         heads=1,
         dropout=0.2,
-        attn_dropout=0.2,
-        **kwargs
+        attn_dropout=0.2
     ) -> None:
         """Initiate wrapper class for embeddings used in Mamba CEHR classes."""
         super().__init__()
