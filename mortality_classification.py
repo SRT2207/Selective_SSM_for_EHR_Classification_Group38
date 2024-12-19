@@ -133,10 +133,10 @@ def train(
         model = MambaPretrain(
             #TODO set model parameters
             learning_rate = 5e-5,
-            num_hidden_layers = 8,
-            state_size = 8,
-            conv_kernel = 8,
-            expand = 2,
+            num_hidden_layers = 2,
+            state_size = 2,
+            conv_kernel = 16,
+            expand = 1,
             dropout_prob=0.3,
             classifier_dropout=0.3,
         )
